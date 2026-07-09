@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { User, Phone, MapPin, Clock, TrendingUp } from 'lucide-react';
+import { User, Phone, MapPin, Clock, TrendingUp, Download } from 'lucide-react';
 import api from '../../services/api';
 import { formatCurrency } from '../../utils/formatters';
 import Card from '../../components/admin/ui/Card';
 import Badge from '../../components/admin/ui/Badge';
+import Button from '../../components/admin/ui/Button';
 
 const CustomerManager = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+  const handleExportCustomers = async () => {
+    try {
+      const response = await api.get('/metrics/export/customers', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'clientes.csv');
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error('Error exporting customers:', error);
+    }
+  };
 
   useEffect(() => {
     fetchCustomers();
@@ -45,7 +60,14 @@ const CustomerManager = () => {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', height: 'calc(100vh - 200px)' }}>
       {/* Lista de Clientes */}
-      <Card title="Clientes">
+      <Card 
+        title="Clientes" 
+        headerAction={
+          <Button onClick={handleExportCustomers} icon={Download} size="sm">
+            Exportar
+          </Button>
+        }
+      >
         <div style={{ overflowY: 'auto', height: '100%', paddingRight: '0.5rem' }}>
           {customers.map(customer => (
             <div

@@ -8,6 +8,7 @@ import productRoutes from './routes/productRoutes';
 import orderRoutes from './routes/orderRoutes';
 import cartRoutes from './routes/cartRoutes';
 import userRoutes from './routes/userRoutes';
+import metricsRoutes from './routes/metricsRoutes';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/metrics', metricsRoutes);
 
 // Basic Route
 app.get('/api/health', (req: Request, res: Response) => {

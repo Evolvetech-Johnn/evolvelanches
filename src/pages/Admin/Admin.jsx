@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../../contexts/ProductContext';
 import { useStock } from '../../contexts/StockContext';
@@ -11,35 +11,95 @@ import {
   TrendingUp,
   Plus,
   Edit,
+  Download,
+  Users,
 } from 'lucide-react';
 import StatsCard from '../../components/admin/StatsCard';
 import Card from '../../components/admin/ui/Card';
 import Button from '../../components/admin/ui/Button';
 import Badge from '../../components/admin/ui/Badge';
+import api from '../../services/api';
+import { formatCurrency } from '../../utils/formatters';
 
 const Admin = () => {
   const { products } = useProducts();
   const { stockItems } = useStock();
   const navigate = useNavigate();
+  const [metrics, setMetrics] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const lowStockCount = stockItems.filter(
     (item) => item.quantity <= item.minThreshold
   ).length;
 
-  // TODO: Replace with real data from OrderContext
-  const todayOrders = 32;
-  const todayRevenue = 2850.0;
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        const response = await api.get('/metrics');
+        if (response.data.success) {
+          setMetrics(response.data.metrics);
+        }
+      } catch (error) {
+        console.error('Error fetching metrics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMetrics();
+  }, []);
+
+  const handleExportOrders = async () => {
+    try {
+      const response = await api.get('/metrics/export/orders', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'pedidos.csv');
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error('Error exporting orders:', error);
+    }
+  };
+
+  const handleExportCustomers = async () => {
+    try {
+      const response = await api.get('/metrics/export/customers', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'clientes.csv');
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error('Error exporting customers:', error);
+    }
+  };
+
+  if (loading) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>;
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Page Header */}
-      <div>
-        <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: '#111827', margin: 0 }}>
-          Dashboard
-        </h1>
-        <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>
-          Visão geral do seu negócio
-        </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: '#111827', margin: 0 }}>
+            Dashboard
+          </h1>
+          <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>
+            Visão geral do seu negócio
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <Button onClick={handleExportOrders} icon={Download}>
+            Exportar Pedidos
+          </Button>
+          <Button onClick={handleExportCustomers} icon={Download}>
+            Exportar Clientes
+          </Button>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -50,26 +110,29 @@ const Admin = () => {
       }}>
         <StatsCard
           title="Pedidos Hoje"
-          value={todayOrders}
+          value={metrics?.todayOrders || 0}
           icon={ShoppingBag}
           trend="up"
-          trendValue="+12%"
+          trendValue={metrics ? `Total ${metrics.totalOrders}` : ''}
           onClick={() => navigate('/admin/pedidos')}
         />
         <StatsCard
           title="Faturamento Hoje"
-          value={`R$ ${todayRevenue.toFixed(2)}`}
+          value={formatCurrency(metrics?.todayRevenue || 0)}
           icon={DollarSign}
           trend="up"
-          trendValue="+8%"
+          trendValue={metrics ? `Total ${formatCurrency(metrics.totalRevenue)}` : ''}
           variant="primary"
           onClick={() => navigate('/admin/financeiro')}
         />
         <StatsCard
-          title="Itens no Cardápio"
-          value={products.length}
-          icon={UtensilsCrossed}
-          onClick={() => navigate('/admin/cardapio')}
+          title="Clientes Totais"
+          value={metrics?.totalCustomers || 0}
+          icon={Users}
+          trend="up"
+          trendValue={metrics ? `+${metrics.newCustomers} na semana` : ''}
+          variant="success"
+          onClick={() => navigate('/admin/clientes')}
         />
         <StatsCard
           title={lowStockCount > 0 ? 'Alertas de Estoque' : 'Estoque OK'}
@@ -132,6 +195,54 @@ const Admin = () => {
         </div>
       </Card>
 
+      {/* Top Products */}
+      {metrics && metrics.topProducts && metrics.topProducts.length > 0 && (
+        <Card title="Produtos Mais Vendidos" subtitle="Top 10 produtos mais vendidos">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {metrics.topProducts.map((product, index) => (
+              <div
+                key={product.productId}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '1rem',
+                  borderRadius: '0.5rem',
+                  border: '1px solid #e5e7eb',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{ 
+                    width: '2rem', 
+                    height: '2rem', 
+                    borderRadius: '0.5rem', 
+                    backgroundColor: '#F05A28', 
+                    color: 'white', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    fontWeight: 600 
+                  }}>
+                    {index + 1}
+                  </div>
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    style={{ width: '3rem', height: '3rem', objectFit: 'cover', borderRadius: '0.5rem', flexShrink: 0 }}
+                  />
+                  <div>
+                    <h4 style={{ fontWeight: 500, color: '#111827', margin: 0 }}>{product.name}</h4>
+                    <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0.25rem 0 0' }}>
+                      {product.quantity} vendidos - {formatCurrency(product.total)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
       {/* Recent Products */}
       <Card
         title="Últimos Produtos"
@@ -171,7 +282,7 @@ const Admin = () => {
                 <div>
                   <h4 style={{ fontWeight: 500, color: '#111827', margin: 0 }}>{product.name}</h4>
                   <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0.25rem 0 0' }}>
-                    R$ {product.price.toFixed(2)}
+                    {formatCurrency(product.price)}
                   </p>
                 </div>
               </div>
