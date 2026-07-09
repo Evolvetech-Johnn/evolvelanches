@@ -31,17 +31,23 @@ const Admin = () => {
   const todayRevenue = 2850.0;
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: '#111827', margin: 0 }}>
+          Dashboard
+        </h1>
+        <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>
           Visão geral do seu negócio
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '1.5rem',
+      }}>
         <StatsCard
           title="Pedidos Hoje"
           value={todayOrders}
@@ -50,7 +56,6 @@ const Admin = () => {
           trendValue="+12%"
           onClick={() => navigate('/admin/pedidos')}
         />
-        
         <StatsCard
           title="Faturamento Hoje"
           value={`R$ ${todayRevenue.toFixed(2)}`}
@@ -60,14 +65,12 @@ const Admin = () => {
           variant="primary"
           onClick={() => navigate('/admin/financeiro')}
         />
-        
         <StatsCard
           title="Itens no Cardápio"
           value={products.length}
           icon={UtensilsCrossed}
           onClick={() => navigate('/admin/cardapio')}
         />
-        
         <StatsCard
           title={lowStockCount > 0 ? 'Alertas de Estoque' : 'Estoque OK'}
           value={lowStockCount > 0 ? `${lowStockCount} Baixos` : stockItems.length}
@@ -79,57 +82,59 @@ const Admin = () => {
 
       {/* Quick Actions */}
       <Card title="Ações Rápidas">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          <Button
-            variant="outline"
-            onClick={() => navigate('/admin/cardapio')}
-            icon={UtensilsCrossed}
-            className="flex-col h-24 gap-2"
-          >
-            <span className="text-center">Gerenciar Cardápio</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={() => navigate('/admin/produtos/novo')}
-            icon={Plus}
-            className="flex-col h-24 gap-2"
-          >
-            <span className="text-center">Novo Produto</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={() => navigate('/admin/estoque')}
-            icon={Package}
-            className="flex-col h-24 gap-2"
-          >
-            <span className="text-center">Controle Estoque</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={() => navigate('/admin/pedidos')}
-            icon={ShoppingBag}
-            className="flex-col h-24 gap-2"
-          >
-            <span className="text-center">Ver Pedidos</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={() => navigate('/admin/metricas')}
-            icon={TrendingUp}
-            className="flex-col h-24 gap-2"
-          >
-            <span className="text-center">Métricas</span>
-          </Button>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+          gap: '1rem',
+        }}>
+          {[
+            { label: 'Gerenciar Cardápio', icon: UtensilsCrossed, path: '/admin/cardapio' },
+            { label: 'Novo Produto',        icon: Plus,            path: '/admin/produtos/novo' },
+            { label: 'Controle Estoque',    icon: Package,         path: '/admin/estoque' },
+            { label: 'Ver Pedidos',         icon: ShoppingBag,     path: '/admin/pedidos' },
+            { label: 'Métricas',            icon: TrendingUp,      path: '/admin/metricas' },
+          ].map(({ label, icon: Icon, path }) => (
+            <button
+              key={path}
+              onClick={() => navigate(path)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                padding: '1rem',
+                height: '6rem',
+                backgroundColor: '#fff',
+                border: '1px solid #e5e7eb',
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                fontWeight: 500,
+                color: '#374151',
+                fontSize: '0.875rem',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = '#F05A28';
+                e.currentTarget.style.backgroundColor = '#fff4f0';
+                e.currentTarget.style.color = '#F05A28';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = '#e5e7eb';
+                e.currentTarget.style.backgroundColor = '#fff';
+                e.currentTarget.style.color = '#374151';
+              }}
+            >
+              <Icon size={22} />
+              <span style={{ textAlign: 'center', lineHeight: 1.3 }}>{label}</span>
+            </button>
+          ))}
         </div>
       </Card>
 
       {/* Recent Products */}
-      <Card 
-        title="Últimos Produtos" 
+      <Card
+        title="Últimos Produtos"
         subtitle="Produtos adicionados recentemente"
         headerAction={
           <Button
@@ -141,26 +146,36 @@ const Admin = () => {
           </Button>
         }
       >
-        <div className="space-y-3">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {products.slice(0, 5).map((product) => (
             <div
               key={product.id}
-              className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary-500 transition-colors"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '1rem',
+                borderRadius: '0.5rem',
+                border: '1px solid #e5e7eb',
+                transition: 'border-color 0.2s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = '#F05A28'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = '#e5e7eb'}
             >
-              <div className="flex items-center gap-4">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-16 h-16 object-cover rounded-lg"
+                  style={{ width: '4rem', height: '4rem', objectFit: 'cover', borderRadius: '0.5rem', flexShrink: 0 }}
                 />
                 <div>
-                  <h4 className="font-medium text-gray-900">{product.name}</h4>
-                  <p className="text-sm text-gray-600">
+                  <h4 style={{ fontWeight: 500, color: '#111827', margin: 0 }}>{product.name}</h4>
+                  <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0.25rem 0 0' }}>
                     R$ {product.price.toFixed(2)}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Badge variant={product.available ? 'success' : 'danger'}>
                   {product.available ? 'Disponível' : 'Indisponível'}
                 </Badge>

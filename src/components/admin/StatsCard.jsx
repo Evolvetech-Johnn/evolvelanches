@@ -1,84 +1,96 @@
 import React from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
+const VARIANT_STYLES = {
+  default: {
+    card: { backgroundColor: '#fff', borderColor: '#e5e7eb', color: '#111827' },
+    icon: { backgroundColor: '#f3f4f6', color: '#F05A28' },
+    title: { color: '#6b7280' },
+    value: { color: '#111827' },
+    trend: { positive: '#16a34a', negative: '#dc2626' },
+  },
+  primary: {
+    card: { background: 'linear-gradient(135deg,#F05A28,#d94e20)', borderColor: '#d94e20', color: '#fff' },
+    icon: { backgroundColor: 'rgba(255,255,255,0.2)', color: '#fff' },
+    title: { color: 'rgba(255,255,255,0.9)' },
+    value: { color: '#fff' },
+    trend: { positive: 'rgba(255,255,255,0.9)', negative: 'rgba(255,255,255,0.9)' },
+  },
+  success: {
+    card: { background: 'linear-gradient(135deg,#22c55e,#16a34a)', borderColor: '#16a34a', color: '#fff' },
+    icon: { backgroundColor: 'rgba(255,255,255,0.2)', color: '#fff' },
+    title: { color: 'rgba(255,255,255,0.9)' },
+    value: { color: '#fff' },
+    trend: { positive: 'rgba(255,255,255,0.9)', negative: 'rgba(255,255,255,0.9)' },
+  },
+  warning: {
+    card: { background: 'linear-gradient(135deg,#eab308,#ca8a04)', borderColor: '#ca8a04', color: '#fff' },
+    icon: { backgroundColor: 'rgba(255,255,255,0.2)', color: '#fff' },
+    title: { color: 'rgba(255,255,255,0.9)' },
+    value: { color: '#fff' },
+    trend: { positive: 'rgba(255,255,255,0.9)', negative: 'rgba(255,255,255,0.9)' },
+  },
+  danger: {
+    card: { background: 'linear-gradient(135deg,#ef4444,#dc2626)', borderColor: '#dc2626', color: '#fff' },
+    icon: { backgroundColor: 'rgba(255,255,255,0.2)', color: '#fff' },
+    title: { color: 'rgba(255,255,255,0.9)' },
+    value: { color: '#fff' },
+    trend: { positive: 'rgba(255,255,255,0.9)', negative: 'rgba(255,255,255,0.9)' },
+  },
+};
+
 const StatsCard = ({ title, value, icon: Icon, trend, trendValue, onClick, variant = 'default' }) => {
   const isPositive = trend === 'up';
-  
-  const variantClasses = {
-    default: 'bg-white border-gray-200',
-    primary: 'bg-gradient-to-br from-primary-500 to-primary-600 border-primary-600 text-white',
-    success: 'bg-gradient-to-br from-green-500 to-green-600 border-green-600 text-white',
-    warning: 'bg-gradient-to-br from-yellow-500 to-yellow-600 border-yellow-600 text-white',
-    danger: 'bg-gradient-to-br from-red-500 to-red-600 border-red-600 text-white',
-  };
-
-  const iconBgClasses = {
-    default: 'bg-gray-100',
-    primary: 'bg-white/20',
-    success: 'bg-white/20',
-    warning: 'bg-white/20',
-    danger: 'bg-white/20',
-  };
-
-  const textClasses = {
-    default: 'text-gray-900',
-    primary: 'text-white',
-    success: 'text-white',
-    warning: 'text-white',
-    danger: 'text-white',
-  };
-
-  const subtextClasses = {
-    default: 'text-gray-600',
-    primary: 'text-white/90',
-    success: 'text-white/90',
-    warning: 'text-white/90',
-    danger: 'text-white/90',
-  };
+  const V = VARIANT_STYLES[variant] || VARIANT_STYLES.default;
 
   return (
     <div
       onClick={onClick}
-      className={`p-6 rounded-xl border ${variantClasses[variant]} ${
-        onClick ? 'cursor-pointer hover:shadow-lg' : ''
-      } transition-all duration-200`}
+      style={{
+        padding: '1.5rem',
+        borderRadius: '0.75rem',
+        border: '1px solid',
+        cursor: onClick ? 'pointer' : 'default',
+        transition: 'all 0.2s',
+        ...V.card,
+      }}
+      onMouseEnter={e => { if (onClick) e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.15)'; }}
+      onMouseLeave={e => { if (onClick) e.currentTarget.style.boxShadow = 'none'; }}
     >
-      <div className="flex items-start justify-between">
-        {/* Left Section */}
-        <div className="flex-1">
-          <p className={`text-sm font-medium ${subtextClasses[variant]} mb-2`}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        {/* Left */}
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem', ...V.title }}>
             {title}
           </p>
-          <h3 className={`text-3xl font-bold ${textClasses[variant]} mb-3`}>
+          <h3 style={{ fontSize: '1.875rem', fontWeight: 700, marginBottom: '0.75rem', ...V.value }}>
             {value}
           </h3>
-          
-          {/* Trend */}
           {trendValue && (
-            <div className="flex items-center gap-1">
-              {isPositive ? (
-                <TrendingUp size={16} className="text-green-500" />
-              ) : (
-                <TrendingDown size={16} className="text-red-500" />
-              )}
-              <span className={`text-sm font-medium ${
-                variant === 'default' 
-                  ? (isPositive ? 'text-green-600' : 'text-red-600')
-                  : 'text-white/90'
-              }`}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              {isPositive
+                ? <TrendingUp size={16} style={{ color: V.trend.positive }} />
+                : <TrendingDown size={16} style={{ color: V.trend.negative }} />}
+              <span style={{ fontSize: '0.875rem', fontWeight: 500, color: isPositive ? V.trend.positive : V.trend.negative }}>
                 {trendValue}
               </span>
-              <span className={`text-xs ${subtextClasses[variant]}`}>
-                vs mês anterior
-              </span>
+              <span style={{ fontSize: '0.75rem', color: V.title.color }}>vs mês anterior</span>
             </div>
           )}
         </div>
 
         {/* Icon */}
         {Icon && (
-          <div className={`p-3 rounded-lg ${iconBgClasses[variant]}`}>
-            <Icon size={24} className={variant === 'default' ? 'text-primary-500' : 'text-white'} />
+          <div style={{
+            padding: '0.75rem',
+            borderRadius: '0.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            ...V.icon,
+          }}>
+            <Icon size={24} />
           </div>
         )}
       </div>

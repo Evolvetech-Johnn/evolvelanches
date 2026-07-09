@@ -42,7 +42,7 @@ const Header = () => {
             <div className="location-indicator">
               <MapPin size={14} />
               <span>
-                Delivery em <strong>Indaiatuba-SP</strong>
+                Delivery em <strong>Londrina-PR</strong>
               </span>
             </div>
           </div>

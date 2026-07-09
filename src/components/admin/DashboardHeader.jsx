@@ -8,59 +8,142 @@ const DashboardHeader = ({ onMenuClick }) => {
   const { isOpen: storeIsOpen, toggleStoreOpen } = useStore();
 
   return (
-    <header className="h-16 bg-white border-b border-gray-200 sticky top-0 z-30">
-      <div className="h-full px-4 flex items-center justify-between">
-        {/* Left Section */}
-        <div className="flex items-center gap-4">
-          {/* Mobile Menu Button */}
+    <header style={{
+      height: '4rem',
+      backgroundColor: '#fff',
+      borderBottom: '1px solid #e5e7eb',
+      position: 'sticky',
+      top: 0,
+      zIndex: 30,
+    }}>
+      <div style={{
+        height: '100%',
+        padding: '0 1.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '1rem',
+      }}>
+        {/* Left */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button
             onClick={onMenuClick}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '0.5rem',
+              borderRadius: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              color: '#374151',
+            }}
           >
             <Menu size={24} />
           </button>
 
-          {/* Search Bar */}
-          <div className="hidden md:flex items-center gap-2 bg-gray-100 rounded-lg px-4 py-2 w-80">
-            <Search size={20} className="text-gray-400" />
+          {/* Search */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            backgroundColor: '#f3f4f6',
+            borderRadius: '0.5rem',
+            padding: '0.5rem 1rem',
+            width: '20rem',
+          }}>
+            <Search size={18} style={{ color: '#9ca3af', flexShrink: 0 }} />
             <input
               type="text"
               placeholder="Buscar..."
-              className="bg-transparent border-none outline-none w-full text-sm"
+              style={{
+                background: 'none',
+                border: 'none',
+                outline: 'none',
+                width: '100%',
+                fontSize: '0.875rem',
+                color: '#374151',
+              }}
             />
           </div>
         </div>
 
-        {/* Right Section */}
-        <div className="flex items-center gap-4">
-          {/* Store Status Toggle */}
+        {/* Right */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {/* Store Toggle */}
           <button
             onClick={toggleStoreOpen}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-              storeIsOpen
-                ? 'bg-green-500 hover:bg-green-600 text-white'
-                : 'bg-red-500 hover:bg-red-600 text-white'
-            }`}
+            style={{
+              padding: '0.5rem 1rem',
+              borderRadius: '0.5rem',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              color: '#fff',
+              backgroundColor: storeIsOpen ? '#22c55e' : '#ef4444',
+              transition: 'background 0.2s',
+              whiteSpace: 'nowrap',
+            }}
           >
-            {storeIsOpen ? 'Loja Aberta' : 'Loja Fechada'}
+            {storeIsOpen ? '✔ Loja Aberta' : '✘ Loja Fechada'}
           </button>
 
           {/* Notifications */}
-          <button className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
-            <Bell size={20} />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
+          <div style={{ position: 'relative' }}>
+            <button style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '0.5rem',
+              borderRadius: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              color: '#374151',
+            }}>
+              <Bell size={20} />
+            </button>
+            <span style={{
+              position: 'absolute',
+              top: '0.25rem',
+              right: '0.25rem',
+              width: '0.5rem',
+              height: '0.5rem',
+              backgroundColor: '#ef4444',
+              borderRadius: '9999px',
+              display: 'block',
+            }} />
+          </div>
 
-          {/* User Profile */}
-          <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
-            <div className="hidden sm:block text-right">
-              <p className="text-sm font-medium text-gray-900">
+          {/* User */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            padding: '0.5rem 0.75rem',
+            borderRadius: '0.5rem',
+            cursor: 'pointer',
+          }}>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#111827', margin: 0 }}>
                 {user?.name || 'Admin'}
               </p>
-              <p className="text-xs text-gray-500">Administrador</p>
+              <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: 0 }}>Administrador</p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-medium">
-              {user?.name?.[0] || 'A'}
+            <div style={{
+              width: '2.5rem',
+              height: '2.5rem',
+              borderRadius: '9999px',
+              backgroundColor: '#F05A28',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+              fontWeight: 600,
+              fontSize: '1rem',
+              flexShrink: 0,
+            }}>
+              {user?.name?.[0]?.toUpperCase() || 'A'}
             </div>
           </div>
         </div>

@@ -15,7 +15,7 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex' }}>
       {/* Sidebar */}
       <Sidebar
         isOpen={sidebarOpen}
@@ -24,16 +24,19 @@ const AdminLayout = () => {
       />
 
       {/* Main Content */}
-      <div
-        className={`transition-all duration-300 ${
-          sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'
-        }`}
-      >
+      <div style={{
+        flex: 1,
+        marginLeft: sidebarOpen ? '16rem' : '5rem',
+        transition: 'margin-left 0.3s ease',
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
         {/* Header */}
         <DashboardHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
         {/* Page Content */}
-        <main className="p-6">
+        <main style={{ padding: '1.5rem', flex: 1 }}>
           <Outlet />
         </main>
       </div>

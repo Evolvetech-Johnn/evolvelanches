@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Instagram, MapPin, Phone, ShieldCheck, FileText } from "lucide-react";
+import { MapPin, Phone, ShieldCheck, FileText } from "lucide-react";
 import "./Footer.css";
 import logoImg from "../../assets/evolvelancheslogo.png";
 
@@ -19,16 +19,7 @@ const Footer = () => {
             <p className="footer-tagline">
               As melhores pizzas e lanches da cidade. Sabores irresistíveis preparados com carinho.
             </p>
-            <div className="social-links">
-              <a
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-btn"
-              >
-                <Instagram size={20} />
-              </a>
-            </div>
+
           </div>
 
           <div className="footer-links-col">
@@ -54,9 +45,7 @@ const Footer = () => {
             <div className="contact-item">
               <MapPin size={20} className="contact-icon" />
               <p>
-                Rua Exemplo, 123 - Bairro Modelo,
-                <br />
-                Cidade Exemplo, UF - CEP 00000-000
+                Londrina – PR,
                 <br />
                 Brasil
               </p>
@@ -65,9 +54,9 @@ const Footer = () => {
               <Phone size={20} className="contact-icon" />
               <div>
                 <p className="franchise-highlight">
-                  <strong>Seja um franqueado:</strong>
+                  <strong>Entre em contato:</strong>
                   <br />
-                  (XX) XXXXX-XXXX
+                  (43) 98870-4856
                 </p>
               </div>
             </div>

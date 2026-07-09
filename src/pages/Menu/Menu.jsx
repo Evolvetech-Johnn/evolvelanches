@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useProducts } from '../../contexts/ProductContext';
 import ProductCard from '../../components/product/ProductCard';
 import { categories } from '../../services/mockData';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 import { Link } from 'react-router-dom';
