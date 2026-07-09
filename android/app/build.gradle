@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.evolvetech.therooster"
+    namespace = "com.evolvetech.evolvelanches"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.evolvetech.therooster"
+        applicationId "com.evolvetech.evolvelanches"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

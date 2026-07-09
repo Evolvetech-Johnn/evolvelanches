@@ -13,7 +13,7 @@ export default {
           200: '#ffcbb3',
           300: '#ffaa80',
           400: '#ff844d',
-          500: '#F05A28', // The Rooster Orange
+          500: '#F05A28', // Evolvelanches Orange
           600: '#d94916',
           700: '#b33a0f',
           800: '#8c2e0b',

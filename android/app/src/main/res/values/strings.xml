@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">The Rooster</string>
-    <string name="title_activity_main">The Rooster</string>
-    <string name="package_name">com.evolvetech.therooster</string>
-    <string name="custom_url_scheme">com.evolvetech.therooster</string>
+    <string name="app_name">Evolvelanches</string>
+    <string name="title_activity_main">Evolvelanches</string>
+    <string name="package_name">com.evolvetech.evolvelanches</string>
+    <string name="custom_url_scheme">com.evolvetech.evolvelanches</string>
 </resources>

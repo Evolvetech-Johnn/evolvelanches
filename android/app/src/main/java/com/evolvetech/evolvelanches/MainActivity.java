@@ -1,4 +1,4 @@
-package com.evolvetech.therooster;
+package com.evolvetech.evolvelanches;
 
 import com.getcapacitor.BridgeActivity;
 
