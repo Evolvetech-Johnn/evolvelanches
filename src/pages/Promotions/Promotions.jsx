@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useProducts } from '../../contexts/ProductContext';
 import ProductCard from '../../components/product/ProductCard';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { X, Flame } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
 import { Link } from 'react-router-dom';

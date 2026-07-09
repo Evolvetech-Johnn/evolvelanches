@@ -18,6 +18,8 @@ export interface IOrder extends Document {
   status: string;
   paymentMethod?: string;
   observation?: string;
+  orderType?: string;
+  deliveryFee?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -68,7 +70,7 @@ const OrderSchema: Schema = new Schema({
   },
   status: {
     type: String,
-    enum: ['Recebido', 'Em preparo', 'Saiu para entrega', 'Entregue', 'Retirado', 'Cancelado'],
+    enum: ['Recebido', 'Preparando', 'Pronto', 'Saiu p/ Entrega', 'Pronto p/ Retirada', 'Entregue', 'Retirado', 'Cancelado'],
     default: 'Recebido'
   },
   paymentMethod: {
@@ -76,6 +78,15 @@ const OrderSchema: Schema = new Schema({
   },
   observation: {
     type: String
+  },
+  orderType: {
+    type: String,
+    enum: ['delivery', 'pickup', 'dine_in'],
+    default: 'delivery'
+  },
+  deliveryFee: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true

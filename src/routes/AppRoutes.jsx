@@ -13,6 +13,7 @@ import Promotions from "../pages/Promotions/Promotions";
 
 import AdminLayout from "../pages/Admin/AdminLayout";
 import OrderManager from "../pages/Admin/OrderManager";
+import CustomerManager from "../pages/Admin/CustomerManager";
 import Financials from "../pages/Admin/Financials";
 import Inventory from "../pages/Admin/Inventory";
 import Metrics from "../pages/Admin/Metrics";
@@ -46,6 +47,7 @@ const AppRoutes = () => {
           <Route path="produtos/novo" element={<ProductForm />} />
           <Route path="produtos/editar/:id" element={<ProductForm />} />
           <Route path="pedidos" element={<OrderManager />} />
+          <Route path="clientes" element={<CustomerManager />} />
           <Route path="financeiro" element={<Financials />} />
           <Route path="cardapio" element={<Inventory />} />
           <Route path="estoque" element={<RawMaterials />} />

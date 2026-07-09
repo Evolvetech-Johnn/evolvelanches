@@ -10,6 +10,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  Users,
 } from 'lucide-react';
 
 const S = {
@@ -129,6 +130,7 @@ const Sidebar = ({ isOpen, setIsOpen, onLogout }) => {
   const navItems = [
     { path: '/admin',            icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/admin/pedidos',    icon: ShoppingBag,     label: 'Pedidos' },
+    { path: '/admin/clientes',   icon: Users,           label: 'Clientes' },
     { path: '/admin/financeiro', icon: DollarSign,      label: 'Financeiro' },
     { path: '/admin/cardapio',   icon: UtensilsCrossed, label: 'Cardápio' },
     { path: '/admin/estoque',    icon: Package,         label: 'Estoque' },
