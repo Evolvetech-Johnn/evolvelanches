@@ -10,6 +10,64 @@ const CustomerManager = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [availableTags, setAvailableTags] = useState([]);
+  const [selectedFilterTag, setSelectedFilterTag] = useState(null);
+  const [customerTagsInput, setCustomerTagsInput] = useState('');
+
+  const fetchCustomers = async (tag = null) => {
+    try {
+      const params = tag ? { tag } : {};
+      const response = await api.get('/users', { params });
+      if (response.data.success) {
+        setCustomers(response.data.users);
+      }
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchAvailableTags = async () => {
+    try {
+      const response = await api.get('/users/tags');
+      if (response.data.success) {
+        setAvailableTags(response.data.tags);
+      }
+    } catch (error) {
+      console.error('Error fetching tags:', error);
+    }
+  };
+
+  const fetchCustomerDetails = async (customerId) => {
+    try {
+      const response = await api.get(`/users/${customerId}`);
+      if (response.data.success) {
+        setSelectedCustomer(response.data.user);
+        setCustomerTagsInput(response.data.user.tags.join(', '));
+      }
+    } catch (error) {
+      console.error('Error fetching customer details:', error);
+    }
+  };
+
+  const handleUpdateCustomerTags = async () => {
+    if (!selectedCustomer) return;
+    const tags = customerTagsInput.split(',').map(tag => tag.trim()).filter(tag => tag);
+    try {
+      const response = await api.put(`/users/${selectedCustomer._id}/tags`, { tags });
+      if (response.data.success) {
+        setSelectedCustomer(prev => ({
+          ...prev,
+          tags: response.data.user.tags
+        }));
+        fetchAvailableTags();
+        fetchCustomers(selectedFilterTag);
+      }
+    } catch (error) {
+      console.error('Error updating tags:', error);
+    }
+  };
 
   const handleExportCustomers = async () => {
     try {
@@ -26,32 +84,13 @@ const CustomerManager = () => {
   };
 
   useEffect(() => {
-    fetchCustomers();
+    fetchCustomers(selectedFilterTag);
+    fetchAvailableTags();
   }, []);
 
-  const fetchCustomers = async () => {
-    try {
-      const response = await api.get('/users');
-      if (response.data.success) {
-        setCustomers(response.data.users);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar clientes:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCustomerDetails = async (customerId) => {
-    try {
-      const response = await api.get(`/users/${customerId}`);
-      if (response.data.success) {
-        setSelectedCustomer(response.data.user);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar detalhes do cliente:', error);
-    }
-  };
+  useEffect(() => {
+    fetchCustomers(selectedFilterTag);
+  }, [selectedFilterTag]);
 
   if (loading) {
     return <div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>;
@@ -63,9 +102,23 @@ const CustomerManager = () => {
       <Card 
         title="Clientes" 
         headerAction={
-          <Button onClick={handleExportCustomers} icon={Download} size="sm">
-            Exportar
-          </Button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            {availableTags.length > 0 && (
+              <select
+                value={selectedFilterTag}
+                onChange={(e) => setSelectedFilterTag(e.target.value || null)}
+                style={{ padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #e5e7eb', fontSize: '0.875rem' }}
+              >
+                <option value="">Todos</option>
+                {availableTags.map(tag => (
+                  <option key={tag}>{tag}</option>
+                ))}
+              </select>
+            )}
+            <Button onClick={handleExportCustomers} icon={Download} size="sm">
+              Exportar
+            </Button>
+          </div>
         }
       >
         <div style={{ overflowY: 'auto', height: '100%', paddingRight: '0.5rem' }}>
@@ -90,6 +143,13 @@ const CustomerManager = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
                   <User size={16} style={{ color: '#6b7280' }} />
                   <span style={{ fontWeight: 500, color: '#111827' }}>{customer.name}</span>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginTop: '0.25rem' }}>
+                  {customer.tags && customer.tags.length > 0 && customer.tags.map(tag => (
+                    <Badge key={tag} style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}>
+                      {tag}
+                    </Badge>
+                  ))}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#6b7280', fontSize: '0.875rem' }}>
                   <Phone size={12} />
@@ -167,6 +227,33 @@ const CustomerManager = () => {
                 <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#111827' }}>
                   {formatCurrency(selectedCustomer.averageTicket)}
                 </div>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ margin: '0 0 0.75rem', fontSize: '1.125rem', fontWeight: 600, color: '#111827' }}>
+                Tags
+              </h3>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+                {selectedCustomer.tags && selectedCustomer.tags.length > 0 && selectedCustomer.tags.map(tag => (
+                  <Badge key={tag} style={{ fontSize: '0.875rem', padding: '0.5rem 0.75rem' }}>
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <input
+                  type="text"
+                  value={customerTagsInput}
+                  onChange={(e) => setCustomerTagsInput(e.target.value)}
+                  placeholder="Adicione tags separadas por vírgula"
+                  style={{
+                    flex: 1, padding: '0.5rem', border: '1px solid #e5e7eb', borderRadius: '0.5rem', fontSize: '0.875rem'
+                  }}
+                />
+                <Button onClick={handleUpdateCustomerTags} size="sm">
+                  Salvar
+                </Button>
               </div>
             </div>
 
