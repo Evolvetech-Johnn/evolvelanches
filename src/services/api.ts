@@ -14,7 +14,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const user = localStorage.getItem("theRoosterUser");
+    const user = localStorage.getItem("evolveUser");
     if (user) {
       try {
         const parsedUser = JSON.parse(user);
@@ -39,7 +39,7 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response && error.response.status === 401) {
       // Handle unauthorized access (e.g., logout user)
-      localStorage.removeItem("theRoosterUser");
+      localStorage.removeItem("evolveUser");
       window.location.href = "/login";
     }
     return Promise.reject(error);

@@ -3,21 +3,27 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import authRoutes from './routes/authRoutes';
+import productRoutes from './routes/productRoutes';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/the-rooster';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/evolvelanches';
 
 // Middleware
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+
 // Basic Route
 app.get('/api/health', (req: Request, res: Response) => {
-  res.json({ status: 'ok', message: 'The Rooster API is running' });
+  res.json({ status: 'ok', message: 'Evolvelanches API is running' });
 });
 
 // Database Connection
