@@ -1,0 +1,70 @@
+
+> the-rooster@0.0.0 lint
+> eslint .
+
+
+D:\Evolvetech\Webdesign\Projetos\The-Rooster\src\components\layout\Header.jsx
+  9:27  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Evolvetech\Webdesign\Projetos\The-Rooster\src\contexts\AuthContext.jsx
+   2:10  error  'useNavigate' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+   6:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-refresh/only-export-components
+  18:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  16 |     const storedUser = localStorage.getItem('theRoosterUser');
+  17 |     if (storedUser) {
+> 18 |       setUser(JSON.parse(storedUser));
+     |       ^^^^^^^ Avoid calling setState() directly within an effect
+  19 |     }
+  20 |     setIsLoading(false);
+  21 |   }, []);  react-hooks/set-state-in-effect
+
+D:\Evolvetech\Webdesign\Projetos\The-Rooster\src\contexts\CartContext.jsx
+  6:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\Evolvetech\Webdesign\Projetos\The-Rooster\src\pages\Admin\Admin.jsx
+  1:17  error  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Evolvetech\Webdesign\Projetos\The-Rooster\src\pages\Checkout\Checkout.jsx
+   9:11  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u             no-unused-vars
+   9:17  error  'isAuthenticated' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  10:11  error  'cartItems' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u        no-unused-vars
+  10:32  error  'clearCart' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u        no-unused-vars
+  11:9   error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u         no-unused-vars
+  12:19  error  'setLoading' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u       no-unused-vars
+  12:33  error  'useState' is not defined                                                                        no-undef
+  13:10  error  'success' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  13:19  error  'setSuccess' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u       no-unused-vars
+  13:33  error  'useState' is not defined                                                                        no-undef
+  14:45  error  'useState' is not defined                                                                        no-undef
+  28:51  error  'handleFinishOrder' is not defined                                                               no-undef
+
+D:\Evolvetech\Webdesign\Projetos\The-Rooster\src\pages\Home\Home.jsx
+   4:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u              no-unused-vars
+  11:13  error  'addToCart' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Evolvetech\Webdesign\Projetos\The-Rooster\src\pages\Product\ProductDetails.jsx
+  27:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  25 |     const found = products.find(p => p.id === parseInt(id));
+  26 |     if (found) {
+> 27 |         setProduct(found);
+     |         ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  28 |     } else {
+  29 |         navigate('/catalogo');
+  30 |     }  react-hooks/set-state-in-effect
+
+✖ 21 problems (21 errors, 0 warnings)
+
