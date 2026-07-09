@@ -128,8 +128,7 @@ const Checkout = () => {
 
     setLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
       let fullAddress = "";
       if (orderType === "delivery") {
         fullAddress = `${address.street}, ${address.number} - ${address.neighborhood} (${address.cep})${address.complement ? ` - ${address.complement}` : ''}`;
@@ -140,30 +139,32 @@ const Checkout = () => {
       }
 
       const newOrder = {
-        customer: user?.name || "Cliente",
-        phone: phone,
-        items: cartItems.map((item) => `${item.quantity}x ${item.name}`).join(", "),
-        itemsList: cartItems,
-        total: total,
-        type: orderType,
+        customerName: user?.name || "Cliente",
+        customerPhone: phone,
+        customerAddress: fullAddress,
+        items: cartItems,
+        subtotal: total,
+        orderType: orderType,
         tableNumber: orderType === "dine_in" ? tableNumber : null,
         paymentMethod: paymentMethod,
         changeFor: paymentMethod === "cash" ? changeFor : null,
-        observations: orderObservations,
-        address: fullAddress,
-        deliveryFee: deliveryFee,
-        status: "Recebido", // Initial status
-        createdAt: new Date().toISOString()
+        observation: orderObservations,
+        deliveryFee: deliveryFee
       };
 
-      const createdOrder = addOrder(newOrder);
-      setCreatedOrderId(createdOrder.id);
-
+      const createdOrder = await addOrder(newOrder);
+      if (createdOrder) {
+        setCreatedOrderId(createdOrder.id);
+        setLoading(false);
+        setSuccess(true);
+        clearCart();
+        toast.success("Pedido realizado com sucesso!");
+      }
+    } catch (error) {
+      console.error("Failed to create order:", error);
       setLoading(false);
-      setSuccess(true);
-      clearCart();
-      toast.success("Pedido realizado com sucesso!");
-    }, 1500);
+      toast.error("Ocorreu um erro ao finalizar o pedido. Tente novamente.");
+    }
   };
 
   // Get real-time status from context if order exists

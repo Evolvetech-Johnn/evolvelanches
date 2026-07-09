@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes';
 import productRoutes from './routes/productRoutes';
+import orderRoutes from './routes/orderRoutes';
+import cartRoutes from './routes/cartRoutes';
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/cart', cartRoutes);
 
 // Basic Route
 app.get('/api/health', (req: Request, res: Response) => {
